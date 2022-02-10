@@ -653,3 +653,5 @@ else
   let g:airline_symbols.readonly = ''
   let g:airline_symbols.linenr = ''
 endif
+
+source $HOME/.vim/colorscheme.vim
