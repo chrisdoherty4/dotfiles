@@ -1,7 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -31,22 +27,6 @@ fi
 
 PS1="\[\033[38;5;26m\]\w\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;242m\]>\[$(tput sgr0)\] \[$(tput sgr0)\]"
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
-
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -59,16 +39,72 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-# Terminal configuration
+# Utility functions
 
-# Custom paths
-export PATH="$HOME/.go/bin:/usr/local/opt/coreutils/libexec/gnubin:$HOME/.toolbox/bin:$PATH"
+# Join bash arrays with a single character delimeter.
+function join_by() {
+    local IFS="$1";
+    shift;
+    echo "$*";
+}
 
-# Use the GNU tools man pages.
-export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+# Configure PATH variable
+paths=(
+    "$HOME/.go/bin"
+    "$HOME/.toolbox/bin"
+    "$HOME/.bin"
+    "$(brew --prefix coreutils)/libexec/gnubin"
+    "$(brew --prefix findutils)/libexec/gnubin"
+    "$(brew --prefix gnu-sed)/libexec/gnubin"
+    "$(brew --prefix gnu-tar)/libexec/gnubin"
+    "$(brew --prefix gnu-which)/libexec/gnubin"
+    "$(brew --prefix grep)/libexec/gnubin"
+    "$(brew --prefix make)/libexec/gnubin"
+    "$PATH"
+)
+export PATH=$(join_by : ${paths[@]})
 
-# Go configuration
+# Configure MANPATH variable
+manpaths=(
+    "$(brew --prefix coreutils)/libexe/gnuman"    
+    "$(brew --prefix findutils)/libexec/gnuman"
+    "$(brew --prefix gnu-sed)/libexec/gnuman"
+    "$(brew --prefix gnu-tar)/libexec/gnuman"
+    "$(brew --prefix gnu-which)/libexec/gnuman"
+    "$(brew --prefix grep)/libexec/gnuman"
+    "$(brew --prefix make)/libexec/gnuman"
+    "$(brew --prefix gzip)/share/man"
+    "$(brew --prefix diffutils)/share/man"
+    "$(brew --prefix binutils)/share/man"
+    "$(brew --prefix watch)/share/man"
+    "$(brew --prefix screen)/share/man"
+    "$(brew --prefix wdiff)/share/man"
+    "$(brew --prefix wget)/share/man"
+    "$(brew --prefix m4)/share/man"
+    "$(brew --prefix rsync)/share/man"
+    "$(brew --prefix openssh)/share/man"
+    "$(brew --prefix unzip)/share/man"
+    "$MANPATH"
+)
+export MANPATH=$(join_by : ${manpaths[@]})
+
+# Configure Golang env
 export GOPROXY="https://goproxy.eks-anywhere.model-rocket.aws.dev"
 export GOPATH="$(go env GOPATH)"
 
 # Alias'
+
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
