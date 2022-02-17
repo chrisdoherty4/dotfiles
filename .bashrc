@@ -39,6 +39,8 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+. $HOME/.bash_completion/git-completion.bash
+
 # Utility functions
 
 # Join bash arrays with a single character delimeter.
