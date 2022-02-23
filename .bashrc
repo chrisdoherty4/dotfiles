@@ -94,6 +94,9 @@ export MANPATH=$(join_by : ${manpaths[@]})
 export GOPROXY="https://goproxy.eks-anywhere.model-rocket.aws.dev"
 export GOPATH="$(go env GOPATH)"
 
+# editor for tmux
+export EDITOR=vim
+
 # Alias'
 
 if [ -x /usr/bin/dircolors ]; then
